@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+allure {
+    version = '2.21.0'
+}
+
+
+group = 'com.epam.gavura'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.testng:testng:7.9.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.1'
+    implementation 'io.rest-assured:rest-assured:5.5.5'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    testCompileOnly 'org.projectlombok:lombok:1.18.38'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
+    testImplementation 'io.qameta.allure:allure-testng:2.26.0'
+}
+
+test {
+    useTestNG {
+        options {
+            parallel = 'classes'
+            threadCount = 5
+        }
+        listeners.add('io.qameta.allure.testng.AllureTestNg')
+    }
+    systemProperty "allure.results.directory", layout.buildDirectory.dir("allure-results").get().asFile
+}
