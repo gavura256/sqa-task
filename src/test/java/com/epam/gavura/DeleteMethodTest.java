@@ -5,8 +5,6 @@ import com.epam.gavura.model.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 
