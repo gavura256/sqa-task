@@ -12,58 +12,61 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetMethodTest {
 
+    private final TypiCodeClient client = new TypiCodeClient();
+
     @Test
     public void testGetAllPosts() {
-        Post[] posts = new TypiCodeClient().getAllPosts()
-            .checkStatusCode(SC_OK)
-            .getBodyAs(Post[].class);
+        Post[] posts = client.getAllPosts()
+                .checkStatusCode(SC_OK)
+                .getBodyAs(Post[].class);
 
         assertThat(posts).as("Response should contain posts")
-            .isNotEmpty();
+                .isNotEmpty();
     }
 
     @Test
     public void testGetPostById() {
-        Post randonPost = stream(new TypiCodeClient().getAllPosts()
+        Post randonPost = stream(client.getAllPosts()
                 .checkStatusCode(SC_OK)
                 .getBodyAs(Post[].class))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("No posts found"));
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No posts found"));
 
-        Post actuaPost = new TypiCodeClient().getPostById(randonPost.getId())
-            .checkStatusCode(SC_OK)
-            .getBodyAs(Post.class);
+        Post actuaPost = client.getPostById(randonPost.getId())
+                .checkStatusCode(SC_OK)
+                .getBodyAs(Post.class);
 
         assertThat(actuaPost)
-            .as("Resource should response with the same post object")
-            .isEqualTo(randonPost);
+                .as("Resource should response with the same post object")
+                .isEqualTo(randonPost);
     }
 
     @Test
     public void testGetCommentsByPostId() {
-        int randomId = stream(new TypiCodeClient().getAllPosts()
+        int randomId = client.getAllPosts()
                 .checkStatusCode(SC_OK)
-                .getBodyAs(Post[].class))
-            .findAny().orElseThrow()
-            .getId();
+                .getBodyAsStream(Post[].class)
+                .findAny().orElseThrow(() -> new IllegalArgumentException("No posts found"))
+                .getId();
 
-        Comment[] comments = new TypiCodeClient().getPostByIdComments(randomId)
-            .checkStatusCode(SC_OK)
-            .getBodyAs(Comment[].class);
+        Comment[] comments = client.getPostByIdComments(randomId)
+                .checkStatusCode(SC_OK)
+                .getBodyAs(Comment[].class);
 
-        Comment[] filteredComments = new TypiCodeClient().getAllCommentsFilteredByPostId(randomId)
-            .checkStatusCode(SC_OK)
-            .getBodyAs(Comment[].class);
+        Comment[] filteredComments = client.getAllCommentsFilteredByPostId(randomId)
+                .checkStatusCode(SC_OK)
+                .getBodyAs(Comment[].class);
 
         assertThat(comments)
-            .as("Response should contain exactly the same comments for the post")
-            .containsExactly(filteredComments);
+                .as("Response should contain exactly the same comments for the post")
+                .containsExactly(filteredComments);
     }
 
     @Test
     public void testGetPostByInvalidId() {
         int invalidId = -1;
-        new TypiCodeClient().getPostById(invalidId)
-            .checkStatusCode(SC_NOT_FOUND);
+        client.getPostById(invalidId)
+                .checkStatusCode(SC_NOT_FOUND);
     }
+
 }

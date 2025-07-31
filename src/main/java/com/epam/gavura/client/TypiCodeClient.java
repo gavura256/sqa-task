@@ -2,7 +2,8 @@ package com.epam.gavura.client;
 
 import com.epam.gavura.model.Post;
 
-public class TypiCodeClient extends ServiceClient {
+public class TypiCodeClient extends RestClient {
+
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
     private static final String POSTS = "/posts";
     private static final String COMMENTS = "/comments";
@@ -43,4 +44,5 @@ public class TypiCodeClient extends ServiceClient {
     public ResponseHandler patchPostById(int id, Object body) {
         return defaultPut(String.format("%s%s/%d", BASE_URL, POSTS, id), body);
     }
+
 }

@@ -6,10 +6,11 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 
-class ServiceClient {
+class RestClient {
+
     private final RequestSpecification specification;
 
-    protected ServiceClient() {
+    protected RestClient() {
         specification = RestAssured.given()
             .filter(new ResponseLoggingFilter(LogDetail.ALL, true, System.out))
             .filter(new RequestLoggingFilter(LogDetail.ALL, true, System.out))
@@ -31,4 +32,5 @@ class ServiceClient {
     protected ResponseHandler defaultDelete(String url) {
         return new ResponseHandler(specification.delete(url));
     }
+
 }

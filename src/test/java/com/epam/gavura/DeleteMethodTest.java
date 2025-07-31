@@ -12,49 +12,51 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 @Slf4j
 public class DeleteMethodTest {
+    private final TypiCodeClient client = new TypiCodeClient();
 
     @Test
     public void deletePostTest() {
         log.info("Get random post id.");
-        int randomPostId = Arrays.stream(new TypiCodeClient().getAllPosts()
+        int randomPostId = client.getAllPosts()
                 .checkStatusCode(SC_OK)
-                .getBodyAs(Post[].class))
-            .findAny().orElseThrow(() -> new IllegalArgumentException("No posts found"))
-            .getId();
+                .getBodyAsStream(Post[].class)
+                .findAny().orElseThrow(() -> new IllegalArgumentException("No posts found"))
+                .getId();
 
         log.info("Verify post exist by id: {}", randomPostId);
-        new TypiCodeClient().getPostById(randomPostId)
-            .checkStatusCode(SC_OK);
+        client.getPostById(randomPostId)
+                .checkStatusCode(SC_OK);
 
         log.info("Delete post by id: {}", randomPostId);
-        new TypiCodeClient().deletePostById(randomPostId)
-            .checkStatusCode(SC_OK);
+        client.deletePostById(randomPostId)
+                .checkStatusCode(SC_OK);
 
         log.info("Verify post does not exist by id: {}", randomPostId);
-        new TypiCodeClient().getPostById(randomPostId)
-            .checkStatusCode(SC_NOT_FOUND);
+        client.getPostById(randomPostId)
+                .checkStatusCode(SC_NOT_FOUND);
     }
 
     @Test
     public void deleteNonExistentPostTest() {
         int nonExistentId = 9999;
-        new TypiCodeClient().deletePostById(nonExistentId)
-            .checkStatusCode(SC_NOT_FOUND);
+        client.deletePostById(nonExistentId)
+                .checkStatusCode(SC_NOT_FOUND);
     }
 
     @Test
     public void deletePostTwiceTest() {
-        int randomPostId = Arrays.stream(new TypiCodeClient().getAllPosts()
+        int randomPostId = client.getAllPosts()
                 .checkStatusCode(SC_OK)
-                .getBodyAs(Post[].class))
-            .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("No posts found"))
-            .getId();
+                .getBodyAsStream(Post[].class)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No posts found"))
+                .getId();
 
-        new TypiCodeClient().deletePostById(randomPostId)
-            .checkStatusCode(SC_OK);
+        client.deletePostById(randomPostId)
+                .checkStatusCode(SC_OK);
 
-        new TypiCodeClient().deletePostById(randomPostId)
-            .checkStatusCode(SC_NOT_FOUND);
+        client.deletePostById(randomPostId)
+                .checkStatusCode(SC_NOT_FOUND);
     }
+
 }

@@ -12,8 +12,10 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @FieldNameConstants
 public class Post {
+
     private int id;
     private String title;
     private String body;
     private int userId;
+
 }
