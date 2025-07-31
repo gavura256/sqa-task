@@ -12,6 +12,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 
 @Slf4j
 public class DeleteMethodTest {
+
     private final TypiCodeClient client = new TypiCodeClient();
 
     @Test
